@@ -2,13 +2,14 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var stormpath = require('stormpath');
-
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk('localhost:27017/nodejs');
 
 // Render the home page.
 router.get('/', function(req, res) {
   res.render('index', { title: 'Home', user: req.user });
 });
-
 
 // Render the registration page.
 router.get('/register', function(req, res) {
@@ -75,12 +76,28 @@ router.get('/chat', function (req, res) {
   );
 });
 
+router.get('/userlist', function (req, res) {
+  //if (!req.user || req.user.status !== 'ENABLED') {
+  //  return res.redirect('/login');
+  //}
+
+    var db = req.db;
+    var collection = db.get('imagereview1');
+    collection.find({},{},function(e,docs){
+        res.render('userlist', {
+            "lesions" : docs,
+            title: 'Userlist',
+            user: req.user,
+        });
+    });
+
+});
+
 // Logout the user, then redirect to the home page.
 router.get('/logout', function(req, res) {
   req.logout();
   res.redirect('/');
 });
-
 
 // Authenticate a user.
 router.post(
@@ -94,7 +111,6 @@ router.post(
     }
   )
 );
-
 
 // Render the dashboard page.
 router.get('/dashboard', function (req, res) {

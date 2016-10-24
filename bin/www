@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 var debug = require('debug')('my-application');
 var app = require('../app');
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk('localhost:27017/nodejs');
 
 app.set('port', process.env.PORT || 3000);
 

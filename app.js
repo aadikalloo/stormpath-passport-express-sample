@@ -8,6 +8,9 @@ var passport = require('passport');
 var StormpathStrategy = require('passport-stormpath');
 var session = require('express-session');
 var flash = require('connect-flash');
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk('localhost:27017/nodejs');
 
 var routes = require('./routes/index');
 var app = express();
@@ -32,6 +35,11 @@ app.use(session({ secret: process.env.EXPRESS_SECRET, key: 'sid', cookie: {secur
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+app.use(function(req,res,next){
+    req.db = db;
+    next();
+});
 
 app.use('/', routes);
 

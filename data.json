@@ -1,21 +1,16 @@
 [
-	{
-	   "name":"Test data 1",
-	   "lesionData":[
-	      {
-	         "lesionNum":1,
-	         "filenames":[
-	            "img1.jpg",
-	            "img2.jpg"
-	         ]
-	      },
-	      {
-	         "lesionNum":2,
-	         "filenames":[
-	            "img3.jpg",
-	            "img4.jpg"
-	         ]
-	      }
-	   ]
-	}
+   {
+      "lesionNum":1,
+      "filenames":[
+         "img1.jpg",
+         "img2.jpg"
+      ]
+   },
+   {
+      "lesionNum":2,
+      "filenames":[
+         "img3.jpg",
+         "img4.jpg"
+      ]
+   }
 ]
