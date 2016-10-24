@@ -1,0 +1,1 @@
+mongoimport --db nodejs --collection imagereview --type json --file /Users/aadi/Documents/stormpath-passport-express-sample/data.json --jsonArray

@@ -1,0 +1,31 @@
+extends layout
+
+block body
+  script(src='/socket.io/socket.io.js').
+  script(language='javascript', type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js').
+  script.
+    var socketio = io.connect("172.18.51.49:3000");
+    socketio.on("message_to_client", function(data) {
+    //var arr = $.map(data, function(el) { return el; })
+    var index = [];
+    for (var x in data) {
+    index.push(x);
+    }
+    document.getElementById("chatlog").innerHTML = ("<hr/>" + data["count"] + "</br>" + data["files"][data["count"]%2] + document.getElementById("chatlog").innerHTML);
+    //document.write(data)
+    });
+    function sendMessage() {
+      var msg = document.getElementById("message_input").value;
+      socketio.emit("message_to_server", { message : msg});
+      var x = document.getElementById("box1").checked;
+      //alert(x);
+    }
+  input#message_input(type='text')
+  button(onclick='sendMessage()') send
+  input#box1(type='checkbox')
+  |  Box1
+  br
+  input#box2(type='checkbox')
+  |  Box2
+  br
+  #chatlog

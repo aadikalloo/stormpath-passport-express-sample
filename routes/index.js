@@ -15,7 +15,6 @@ router.get('/register', function(req, res) {
   res.render('register', { title: 'Register', error: req.flash('error')[0] });
 });
 
-
 // Register a new user to Stormpath.
 router.post('/register', function(req, res) {
 
@@ -58,12 +57,23 @@ router.post('/register', function(req, res) {
 
 });
 
-
 // Render the login page.
 router.get('/login', function(req, res) {
   res.render('login', { title: 'Login', error: req.flash('error')[0] });
 });
 
+//render chat page
+router.get('/chat', function (req, res) {
+  if (!req.user || req.user.status !== 'ENABLED') {
+    return res.redirect('/login');
+  }
+
+  res.render('chat', {
+    title: 'Chat',
+    user: req.user,
+    }
+  );
+});
 
 // Logout the user, then redirect to the home page.
 router.get('/logout', function(req, res) {

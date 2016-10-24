@@ -1,13 +1,3 @@
-#!/usr/bin/env node
-var debug = require('debug')('my-application');
-var app = require('../app');
-
-app.set('port', process.env.PORT || 3000);
-
-var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
-});
-
 var http = require('http'),
 	fs = require('fs'),
     path = require('path'),
@@ -17,14 +7,21 @@ var http = require('http'),
 var files1 = getImages2(imageDir); //want to send this to client
 var counter = 0;
 
-var io = require('socket.io').listen(server); //app //app2
+var app = http.createServer(function (request, response) {
+	fs.readFile("client.html", 'utf-8', function (error, data) {
+		response.writeHead(200, {'Content-Type': 'text/html'});
+		response.write(data);
+		response.end();
+	});
+}).listen(8080);
+
+var io = require('socket.io').listen(app);
 
 io.sockets.on('connection', function(socket) { 
 	socket.on('message_to_server', function(data) { 
 		var escaped_message = data["message"];
-		var dataObj = {"count": counter, "files": files1};
-		io.sockets.emit("message_to_client", dataObj); 
-		console.log(JSON.stringify(dataObj["files"]));
+		io.sockets.emit("message_to_client", files1); 
+		console.log(JSON.stringify(files1));
 		console.log(counter); counter = counter + 1;
 	});
 });

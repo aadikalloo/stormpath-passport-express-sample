@@ -4,7 +4,7 @@ html
     meta(charset='utf-8')
     meta(content='IE=edge', http-equiv='X-UA-Compatible')
     meta(content='width=device-width, initial-scale=1', name='viewport')
-    title= 'Express-Stormpath (sample) | ' + title
+    title= 'Serial Dermoscopic Image Review' + title
     link(href='/css/bootstrap.min.css', rel='stylesheet')
     link(href='/css/style.css', rel='stylesheet')
     <!--[if lt IE 9 ]>
@@ -21,11 +21,13 @@ html
             li
               a(href='/dashboard') Dashboard
             li
+              a(href='/chat') Chat
+            li
               a(href='/logout') Logout
           else
             li
               a(href='/login') Login
-        h3.text-muted Stormpath-Express-Sample
+        h3.text-muted Serial Imaging Review
       block body
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
     script(src='/js/bootstrap.min.js')
