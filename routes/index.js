@@ -5,6 +5,13 @@ var stormpath = require('stormpath');
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/nodejs');
+var app1 = require('../app.js');
+var debug = require('debug')('my-application');
+var http = require('http');
+var fs = require('fs');
+var path = require('path');
+var url = require('url');
+
 
 // Render the home page.
 router.get('/', function(req, res) {
@@ -83,7 +90,8 @@ router.get('/userlist', function (req, res) {
 
     var db = req.db;
     var collection = db.get('imagereview1');
-    collection.find({},{},function(e,docs){
+    collection.find({lesionNum:1},{},function(e,docs){
+        
         res.render('userlist', {
             "lesions" : docs,
             title: 'Userlist',

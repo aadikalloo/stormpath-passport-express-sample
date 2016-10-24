@@ -1,16 +1,31 @@
 extends layout
 
-head
-    link(type='text/css', rel='stylesheet', href='../node_modules/lightgallery/src/css')
 
 block body
-    h1.
-        Image List
-    ul
-      each value, key in lesions
-        li=value.lesionNum
-        ul
-          each v, k in value.filenames
-            li=v
+  h1.
+      Image List
+  //ul
+    each value, key in lesions
+      li=value.lesionNum
+      ul
+        each v, k in value.filenames
+          li=v
+  .demo-gallery
+    ul#lightgallery.list-unstyled.row
+      li.col-xs-6.col-sm-4.col-md-3(data-responsive='img/img1-thumb.jpg 375, img/img1-thumb.jpg 480, img/img1.jpg 800', data-src='img/img1.jpg', data-sub-html='<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>')
+        a(href='')
+          img.img-responsive(src='img/img1.jpg')
+      li.col-xs-6.col-sm-4.col-md-3(data-responsive='img/img2-thumb.jpg 375, img/img2-thumb.jpg 480, img/img2.jpg 800', data-src='img/img2.jpg', data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>")
+        a(href='')
+          img.img-responsive(src='img/img2.jpg')
+  script.
+    var ax = lesions.length();
+    alert(ax);
+  script.
+    $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/img2-thumb.jpg 375, img/img2-thumb.jpg 480, img/img2.jpg 800" data-src="img/img2.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/img2.jpg" class="img-responsive"></a></li>');
+  script.
+    $("#lightgallery").lightGallery();
+
+
 
                       

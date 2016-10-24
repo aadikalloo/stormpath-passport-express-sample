@@ -2,9 +2,8 @@ extends layout
 
 block body
   script(src='/socket.io/socket.io.js').
-  script(language='javascript', type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js').
   script.
-    var socketio = io.connect("172.18.51.49:3000");
+    var socketio = io.connect("localhost:3000");
     socketio.on("message_to_client", function(data) {
     //var arr = $.map(data, function(el) { return el; })
     var index = [];
