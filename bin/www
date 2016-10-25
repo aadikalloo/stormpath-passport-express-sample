@@ -3,7 +3,6 @@ var debug = require('debug')('my-application');
 var app1 = require('../app');
 var mongodb = require('mongodb');
 var databaseUrl = "localhost:27017/nodejs"; // "username:password@example.com/mydb"
-var collections = ["imagereview1"]
 var db = require("mongojs")(databaseUrl);
 var http = require('http');
 var fs = require('fs');
