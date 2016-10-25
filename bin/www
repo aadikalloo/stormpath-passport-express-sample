@@ -1,9 +1,18 @@
 #!/usr/bin/env node
 var debug = require('debug')('my-application');
 var app1 = require('../app');
-var mongo = require('mongodb');
-var monk = require('monk');
-var db = monk('localhost:27017/nodejs');
+var mongodb = require('mongodb');
+//var monk = require('monk');
+//var db = require('monk')('localhost:27017/nodejs'); ##
+//var imdata = db.get('imagereview1');
+//var connection = require('./connection');
+//var Server = require('mongodb').Server;
+//var Db = require('mongodb').Db;
+//var db = new Db('nodejs', new Server('localhost', 27017));
+var databaseUrl = "localhost:27017/nodejs"; // "username:password@example.com/mydb"
+var collections = ["imagereview1"]
+var db = require("mongojs")(databaseUrl);
+
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
@@ -11,14 +20,40 @@ var url = require('url');
 var imageDir = '/Users/aadi/Downloads/la/';
 var files1 = getImages2(imageDir); //want to send this to client
 var counter = 0;
+var express = require('express');
+var router = express.Router();
+var nodeArr = '';
 
 app1.set('port', process.env.PORT || 3000);
+
+function _getMsg(st, callback) {
+    //console.log(st);
+    db.collection('imagereview1').find({"lesionNum": st }).toArray(function (err, docs) {
+        //console.log(docs);
+        callback(docs);
+    });
+}
 
 var server = app1.listen(app1.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
 });
 
 var io = require('socket.io').listen(server); //app //app2
+
+io.on("connection", function (socket) {
+    var tweet = {user: "nodesource", text: "Hello, world!"};
+    // to make things interesting, have it send every second
+    _getMsg(1, function (res) {
+        console.log(res); // --> res contain data and printed ok
+        nodeArr = res;  // just moved the nodeArr declaration to function scope
+        // *** do next step here, like send results to client
+    });
+    console.log(nodeArr);
+    socket.emit("tweet", nodeArr[0]);
+    socket.on("tweet1", function (tweet1) {
+        console.log(tweet1);
+    });
+});
 
 io.sockets.on('connection', function(socket) { 
 	socket.on('message_to_server', function(data) { 
@@ -42,3 +77,5 @@ function getImages2(imageDir) {
     });
     return files;
 }
+
+module.exports = server;

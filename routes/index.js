@@ -11,7 +11,10 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
+var server = require('../bin/www')
 
+var io = require('socket.io').listen(server); //app //app2
+//var socketio = io.connect("localhost:3000"); //for client only
 
 // Render the home page.
 router.get('/', function(req, res) {
@@ -87,19 +90,43 @@ router.get('/userlist', function (req, res) {
   //if (!req.user || req.user.status !== 'ENABLED') {
   //  return res.redirect('/login');
   //}
+/*  db.collection('imagereview1').find({lesionNum:1}, function(err, docs) {
+    if (err) {
+        res.status(500).send(err);
+    } else {
+      io.on("connection", function (socket) {
+          //var tweet = {user: "nodesource", text: "Hello, world!"};
 
-    var db = req.db;
-    var collection = db.get('imagereview1');
-    collection.find({lesionNum:1},{},function(e,docs){
-        
-        res.render('userlist', {
-            "lesions" : docs,
-            title: 'Userlist',
-            user: req.user,
-        });
-    });
+          // to make things interesting, have it send every second
+          
+          socket.emit("tweet", docs);
+          
 
+          socket.on("disconnect", function () {
+              //clearInterval(interval);
+          });
+      });
+    }
+  });*/
+/*  io.on("connection", function (socket) {
+      var tweet = {user: "nodesource", text: "Hello, world!"};
+
+      // to make things interesting, have it send every second
+      var interval = setInterval(function () {
+          socket.emit("tweet", tweet);
+      }, 1000);
+
+      socket.on("disconnect", function () {
+          clearInterval(interval);
+      });
+  });*/
+  console.log(1);
+  res.render('userlist', {
+      title: 'Userlist',
+      user: req.user,
+  });
 });
+
 
 // Logout the user, then redirect to the home page.
 router.get('/logout', function(req, res) {
