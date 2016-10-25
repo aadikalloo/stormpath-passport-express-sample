@@ -23,6 +23,7 @@ var counter = 0;
 var express = require('express');
 var router = express.Router();
 var nodeArr = '';
+var requestedLesionNum = '';
 
 app1.set('port', process.env.PORT || 3000);
 
@@ -41,20 +42,27 @@ var server = app1.listen(app1.get('port'), function() {
 var io = require('socket.io').listen(server); //app //app2
 
 io.on("connection", function (socket) {
-    var tweet = {user: "nodesource", text: "Hello, world!"};
-    // to make things interesting, have it send every second
-    _getMsg(1, function (res) {
-        console.log(res); // --> res contain data and printed ok
+    console.log('connection from: ', socket.id);
+    socket.on("tweet1", function (tweet1) {
+        console.log('server receives: ', tweet1);
+        requestedLesionNum = tweet1;
+        _getMsg(requestedLesionNum, function (res) {
+            nodeArr = res;  // just moved the nodeArr declaration to function scope
+            console.log('server sends: ', nodeArr);
+            socket.emit("tweet", nodeArr[0]);
+        });
+    });
+    //console.log(requestedLesionNum);
+});
+
+/*io.on("connection", function (socket) {
+    _getMsg(requestedLesionNum, function (res) {
         nodeArr = res;  // just moved the nodeArr declaration to function scope
-        // *** do next step here, like send results to client
     });
     console.log(nodeArr);
     socket.emit("tweet", nodeArr[0]);
-    socket.on("tweet1", function (tweet1) {
-        console.log(tweet1);
-    });
 });
-
+*/
 io.sockets.on('connection', function(socket) { 
 	socket.on('message_to_server', function(data) { 
 		var escaped_message = data["message"];

@@ -90,36 +90,6 @@ router.get('/userlist', function (req, res) {
   //if (!req.user || req.user.status !== 'ENABLED') {
   //  return res.redirect('/login');
   //}
-/*  db.collection('imagereview1').find({lesionNum:1}, function(err, docs) {
-    if (err) {
-        res.status(500).send(err);
-    } else {
-      io.on("connection", function (socket) {
-          //var tweet = {user: "nodesource", text: "Hello, world!"};
-
-          // to make things interesting, have it send every second
-          
-          socket.emit("tweet", docs);
-          
-
-          socket.on("disconnect", function () {
-              //clearInterval(interval);
-          });
-      });
-    }
-  });*/
-/*  io.on("connection", function (socket) {
-      var tweet = {user: "nodesource", text: "Hello, world!"};
-
-      // to make things interesting, have it send every second
-      var interval = setInterval(function () {
-          socket.emit("tweet", tweet);
-      }, 1000);
-
-      socket.on("disconnect", function () {
-          clearInterval(interval);
-      });
-  });*/
   console.log(1);
   res.render('userlist', {
       title: 'Userlist',

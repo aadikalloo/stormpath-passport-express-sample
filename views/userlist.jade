@@ -21,14 +21,14 @@ block body
   script(src='/socket.io/socket.io.js').
   script.
     var socket = io.connect('http://localhost:3000');
+    var tweet1 = 2;//{user: "nodesource", text: "Hello, world!"};
+    socket.emit("tweet1", tweet1);
     socket.on("tweet", function(tweet) {
         // todo: add the tweet as a DOM node
-        console.log(tweet);
+        console.log('client receives: ', tweet);
         //console.log("tweet from", tweet.user);
         //console.log("contents:", tweet.text);
     });
-    var tweet1 = {user: "nodesource", text: "Hello, world!"};
-    //socket.emit("tweet1", tweet1);
   script.
     $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/img2-thumb.jpg 375, img/img2-thumb.jpg 480, img/img2.jpg 800" data-src="img/img2.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/img2.jpg" class="img-responsive"></a></li>');
   script.
