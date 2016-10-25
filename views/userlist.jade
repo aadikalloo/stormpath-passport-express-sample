@@ -3,12 +3,6 @@ extends layout
 block body
   h1.
       Image List
-  //ul
-    each value, key in lesions
-      li=value.lesionNum
-      ul
-        each v, k in value.filenames
-          li=v
   .demo-gallery
     ul#lightgallery.list-unstyled.row
       li.col-xs-6.col-sm-4.col-md-3(data-responsive='img/img1-thumb.jpg 375, img/img1-thumb.jpg 480, img/img1.jpg 800', data-src='img/img1.jpg', data-sub-html='<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>')
@@ -30,16 +24,11 @@ block body
       data = tweet;
       files = data['filenames'];
       for (i = 0; i < files.length; i++) {
-        $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i], '-thumb.jpg 375, img/', files[i], '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a></li>'));
+        $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a></li>'));
       }
-    });
-    //files = data['filenames'];
-  //script.
-    for (i = 0; i < files.length; i++) {
-      $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(str(files[i]), '-thumb.jpg 375, img/', str(files[i]), '-thumb.jpg 480, img/', str(files[i]), ' 800" data-src="img/', str(files[i]), '" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', str(files[i]), '" class="img-responsive"></a></li>'));
-    }
-  script.
     $("#lightgallery").lightGallery();
+    });
+
 
 
 

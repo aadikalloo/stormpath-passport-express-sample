@@ -14,7 +14,6 @@ var url = require('url');
 var server = require('../bin/www')
 
 var io = require('socket.io').listen(server); //app //app2
-//var socketio = io.connect("localhost:3000"); //for client only
 
 // Render the home page.
 router.get('/', function(req, res) {

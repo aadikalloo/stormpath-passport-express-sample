@@ -2,17 +2,9 @@
 var debug = require('debug')('my-application');
 var app1 = require('../app');
 var mongodb = require('mongodb');
-//var monk = require('monk');
-//var db = require('monk')('localhost:27017/nodejs'); ##
-//var imdata = db.get('imagereview1');
-//var connection = require('./connection');
-//var Server = require('mongodb').Server;
-//var Db = require('mongodb').Db;
-//var db = new Db('nodejs', new Server('localhost', 27017));
 var databaseUrl = "localhost:27017/nodejs"; // "username:password@example.com/mydb"
 var collections = ["imagereview1"]
 var db = require("mongojs")(databaseUrl);
-
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
@@ -55,14 +47,6 @@ io.on("connection", function (socket) {
     //console.log(requestedLesionNum);
 });
 
-/*io.on("connection", function (socket) {
-    _getMsg(requestedLesionNum, function (res) {
-        nodeArr = res;  // just moved the nodeArr declaration to function scope
-    });
-    console.log(nodeArr);
-    socket.emit("tweet", nodeArr[0]);
-});
-*/
 io.sockets.on('connection', function(socket) { 
 	socket.on('message_to_server', function(data) { 
 		var escaped_message = data["message"];
