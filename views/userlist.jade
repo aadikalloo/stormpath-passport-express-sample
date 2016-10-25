@@ -22,15 +22,22 @@ block body
   script.
     var socket = io.connect('http://localhost:3000');
     var tweet1 = 2;//{user: "nodesource", text: "Hello, world!"};
+    var data = '';
     socket.emit("tweet1", tweet1);
     socket.on("tweet", function(tweet) {
-        // todo: add the tweet as a DOM node
-        console.log('client receives: ', tweet);
-        //console.log("tweet from", tweet.user);
-        //console.log("contents:", tweet.text);
+      // todo: add the tweet as a DOM node
+      console.log('client receives: ', tweet);
+      data = tweet;
+      files = data['filenames'];
+      for (i = 0; i < files.length; i++) {
+        $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i], '-thumb.jpg 375, img/', files[i], '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a></li>'));
+      }
     });
-  script.
-    $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/img2-thumb.jpg 375, img/img2-thumb.jpg 480, img/img2.jpg 800" data-src="img/img2.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/img2.jpg" class="img-responsive"></a></li>');
+    //files = data['filenames'];
+  //script.
+    for (i = 0; i < files.length; i++) {
+      $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(str(files[i]), '-thumb.jpg 375, img/', str(files[i]), '-thumb.jpg 480, img/', str(files[i]), ' 800" data-src="img/', str(files[i]), '" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', str(files[i]), '" class="img-responsive"></a></li>'));
+    }
   script.
     $("#lightgallery").lightGallery();
 
