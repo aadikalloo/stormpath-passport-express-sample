@@ -18,9 +18,16 @@ block body
       for (i = 0; i < files.length; i++) {
         $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a></li>'));
       }
-    $("#lightgallery").lightGallery();
+      if($("#lightgallery").data("lightGallery")) {
+        $("#lightgallery").data("lightGallery").destroy(true);
+        createLightGallery();
+      } 
     });
   script.
+    function createLightGallery()
+    {
+      $('#lightgallery').lightGallery();
+    }
     function sendData() {
       var msg = document.getElementById("message_input").value;
       themsg = Number(msg);
@@ -28,7 +35,7 @@ block body
       $("ul#lightgallery.list-unstyled.row").html("");
       socket.emit("tweet1", themsg);
       document.getElementById("message_input").value = "";
-      $("#lightgallery").lightGallery();
+      //$("#lightgallery").lightGallery();
     }
     function requestNext() {
       selectedInput = $('input[name="followupStatus"]:checked').val();
@@ -42,10 +49,11 @@ block body
       console.log(selectedInput);
       $('input[name="followupStatus"]').attr('checked',false);
       }
-      $("#lightgallery").lightGallery();
+      //$("#lightgallery").lightGallery();
     }
     $(document).ready(function() {
       checkContainer();
+      createLightGallery();
     });
     function checkContainer () {
       if($('#sidebar').is(':visible')){ //if the container is visible on the page
@@ -66,6 +74,3 @@ block body
         setTimeout(checkContainer, 50); //wait 50 ms, then try again
       }
     }
-    
-
-              

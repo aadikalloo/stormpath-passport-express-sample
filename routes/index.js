@@ -83,7 +83,6 @@ router.get('/userlist', function (req, res) {
   //if (!req.user || req.user.status !== 'ENABLED') {
   //  return res.redirect('/login');
   //}
-  console.log(1);
   res.render('userlist', {
       title: 'Userlist',
       user: req.user,

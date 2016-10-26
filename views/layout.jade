@@ -21,7 +21,7 @@ html
     script(src='js/jquery.mousewheel.min.js')
     script(src='/socket.io/socket.io.js').
     script.
-        var socket = io.connect('http://172.18.49.220:3000');
+        var socket = io.connect('http://localhost:3000');
     <!--[if lt IE 9 ]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -217,7 +217,7 @@ html
             if(window.location.href.indexOf("userlist") > -1) {
                 $("body").prepend('<div id="sidebar">');
                 $("#sidebar").append('<h1 id="sidebartitle">Review</h1>');
-                $("#sidebartitle").append('<h5>Currently reviewing lesion <p style="display:inline"  id="lesionNumber"></p></h5>');
+                $("#sidebartitle").append('<h5>Currently reviewing lesion <p style="display:inline" id="lesionNumber"></p></h5>');
                 if (window.XMLHttpRequest) {
                     window.onscroll = function() {
                         if ($('body').scrollTop() > 170 || $('html').scrollTop() > 170) {
