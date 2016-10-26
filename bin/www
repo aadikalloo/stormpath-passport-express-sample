@@ -17,11 +17,10 @@ var nodeArr = '';
 var requestedLesionNum = '';
 
 app1.set('port', process.env.PORT || 3000);
+var reviewStorage = db.collection('reviewedData');
 
 function _getMsg(st, callback) {
-    //console.log(st);
     db.collection('imagereview1').find({"lesionNum": st }).toArray(function (err, docs) {
-        //console.log(docs);
         callback(docs);
     });
 }
@@ -39,11 +38,13 @@ io.on("connection", function (socket) {
         requestedLesionNum = tweet1;
         _getMsg(requestedLesionNum, function (res) {
             nodeArr = res;  // just moved the nodeArr declaration to function scope
-            console.log('server sends: ', nodeArr[0]);
+            console.log('server sends: ', nodeArr);
             socket.emit("tweet", nodeArr[0]);
         });
     });
-    //console.log(requestedLesionNum);
+    socket.on("dataToServer", function(data) {
+
+    });
 });
 
 io.sockets.on('connection', function(socket) { 

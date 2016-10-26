@@ -9,7 +9,7 @@ html
     link(href='/css/bootstrap.min.css', rel='stylesheet')
     link(href='/css/style.css', rel='stylesheet')
     link(type='text/css', rel='stylesheet', href='/css/lightGallery.css')
-    <script src='/js/lightGallery.min.js'></script>
+    script(src='/js/lightGallery.min.js')
     script(src='https://cdn.jsdelivr.net/picturefill/2.3.1/picturefill.min.js')
     script(src='js/lg-fullscreen.js')
     script(src='js/lg-thumbnail.js')
@@ -19,6 +19,9 @@ html
     script(src='js/lg-hash.js')
     script(src='js/lg-pager.js')
     script(src='js/jquery.mousewheel.min.js')
+    script(src='/socket.io/socket.io.js').
+    script.
+        var socket = io.connect('http://172.18.49.220:3000');
     <!--[if lt IE 9 ]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -45,8 +48,8 @@ html
     overflow: hidden;
     position: relative;
     float: left;
-    max-width: 250px;
-    min-width: 250px;
+    max-width: 200px; 
+    min-width: 200px;
     max-height: 150px;
     min-height: 150px;
     }
@@ -57,8 +60,8 @@ html
     transition: transform 0.15s ease 0s;
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);
-    max-width: 250px;
-    min-width: 250px;
+    max-width: 200px;
+    min-width: 200px;
     max-height: 150px;
     min-height: 150px;
     }
@@ -177,6 +180,19 @@ html
     left: 302px !important;
     min-height: 100%;
     }
+    #message_input {
+    color: black;
+    }
+    #requestLesionNumButton {
+    color: black;
+    margin-top: 40vh;
+    }
+    #requestLesionNumButton p{
+    color: white;
+    }
+    #nextButton {
+    color: black;
+    }
   body
     .container
       .header
@@ -187,7 +203,7 @@ html
             li
               a(href='/dashboard') Dashboard
             li
-              a(href='/chat') Chat
+              a(href='/userlist') Userlist
             li
               a(href='/logout') Logout
           else
@@ -200,7 +216,8 @@ html
         $(document).ready(function () {
             if(window.location.href.indexOf("userlist") > -1) {
                 $("body").prepend('<div id="sidebar">');
-                $("#sidebar").append('<h1>Sidebar</h1>');
+                $("#sidebar").append('<h1 id="sidebartitle">Review</h1>');
+                $("#sidebartitle").append('<h5>Currently reviewing lesion <p style="display:inline"  id="lesionNumber"></p></h5>');
                 if (window.XMLHttpRequest) {
                     window.onscroll = function() {
                         if ($('body').scrollTop() > 170 || $('html').scrollTop() > 170) {

@@ -2,12 +2,10 @@ extends layout
 
 block body
   h1.
-      Image List
+      Images
   .demo-gallery
     ul#lightgallery.list-unstyled.row
-  script(src='/socket.io/socket.io.js').
   script.
-    var socket = io.connect('http://172.18.49.220:3000');
     var tweet1 = 1;//{user: "nodesource", text: "Hello, world!"};
     var data = '';
     socket.emit("tweet1", tweet1);
@@ -16,9 +14,58 @@ block body
       console.log('client receives: ', tweet);
       data = tweet;
       files = data['filenames'];
+      document.getElementById('lesionNumber').innerHTML = data['lesionNum'];
       for (i = 0; i < files.length; i++) {
         $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a></li>'));
       }
     $("#lightgallery").lightGallery();
     });
+  script.
+    function sendData() {
+      var msg = document.getElementById("message_input").value;
+      themsg = Number(msg);
+      console.log(themsg);
+      $("ul#lightgallery.list-unstyled.row").html("");
+      socket.emit("tweet1", themsg);
+      document.getElementById("message_input").value = "";
+      $("#lightgallery").lightGallery();
+    }
+    function requestNext() {
+      selectedInput = $('input[name="followupStatus"]:checked').val();
+      if(selectedInput == null) {
+        alert("Please select a value.");
+      } else {
+      var nextLesion = data['lesionNum'] + 1;
+      $("ul#lightgallery.list-unstyled.row").html("");
+      socket.emit("tweet1", nextLesion);
+      document.getElementById("message_input").value = "";
+      console.log(selectedInput);
+      $('input[name="followupStatus"]').attr('checked',false);
+      }
+      $("#lightgallery").lightGallery();
+    }
+    $(document).ready(function() {
+      checkContainer();
+    });
+    function checkContainer () {
+      if($('#sidebar').is(':visible')){ //if the container is visible on the page
+        $("#sidebar").append('</br>\
+                              <form>\
+                              <input name="followupStatus" value="unchangedBenign" type="radio"/> Unchanged Benign<br/>\
+                              <input name="followupStatus" value="changedBenign" type="radio"/> Changed Benign<br/>\
+                              <input name="followupStatus" value="changedMalignant" type="radio"/> Changed Malignant<br/>\
+                              <input name="followupStatus" value="Unknown" type="radio"/> Unknown<br/>\
+                              </form>\
+                              </br>\
+                              <button id="nextButton" onclick="requestNext()">Next Lesion</button>\
+                              <div id="requestLesionNumButton">\
+                              <p>Jump to Lesion Number:</p>\
+                              <input id="message_input" type="text"/>\
+                              <button onclick="sendData()">Jump</button></div>');  //append text
+      } else {
+        setTimeout(checkContainer, 50); //wait 50 ms, then try again
+      }
+    }
+    
+
               
