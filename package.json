@@ -21,6 +21,8 @@
     "passport-stormpath": "~0.2.0",
     "static-favicon": "~1.0.0",
     "stormpath": "~0.6.0",
-    "stylus": "0.42.3"
+    "stylus": "0.42.3",
+    "socketio": "^1.0",
+    "mongojo": "^2.4.0"
   }
 }

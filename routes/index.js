@@ -8,9 +8,6 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
-var server = require('../bin/www')
-
-var io = require('socket.io').listen(server); //app //app2
 
 // Render the home page.
 router.get('/', function(req, res) {

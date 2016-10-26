@@ -19,12 +19,10 @@ html
     script(src='js/lg-hash.js')
     script(src='js/lg-pager.js')
     script(src='js/jquery.mousewheel.min.js')
-
     <!--[if lt IE 9 ]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
   style(type='text/css').
     body{
     background-color: #152836
@@ -40,7 +38,6 @@ html
     height: auto;
     object-fit: contain;
     }
-
     .demo-gallery > ul > li a {
     border: 3px solid #FFF;
     border-radius: 3px;
@@ -152,7 +149,34 @@ html
     .home .demo-gallery {
     padding-bottom: 80px;
     }
-
+    #header {
+    width: 450px;
+    height: 150px;
+    border: 1px solid #000;
+    margin-bottom: 20px;
+    }
+    #main {
+    float: right;
+    min-height: 100%;
+    width: 400px;  
+    margin-right: 10px;
+    border: 1px solid #FFF;    
+    }
+    #sidebar {
+    float: right;
+    width: 300px;
+    min-height: 100vh !important;
+    border-left: 1px solid #FFF;
+    padding-left: 10px;
+    margin-left: 10px;
+    background-color: #568;
+    }
+    .sidebarFixed {
+    position: fixed !important;
+    top: 0 !important;
+    left: 302px !important;
+    min-height: 100%;
+    }
   body
     .container
       .header
@@ -171,4 +195,23 @@ html
               a(href='/login') Login
         h3.text-muted Serial Imaging Review
       block body
-    script(src='/js/bootstrap.min.js')
+    script(src='/js/bootstrap.min.js').
+    script.
+        $(document).ready(function () {
+            if(window.location.href.indexOf("userlist") > -1) {
+                $("body").prepend('<div id="sidebar">');
+                $("#sidebar").append('<h1>Sidebar</h1>');
+                if (window.XMLHttpRequest) {
+                    window.onscroll = function() {
+                        if ($('body').scrollTop() > 170 || $('html').scrollTop() > 170) {
+                            if ($(window).height() > 20) {
+                                $('#sidebar').addClass('sidebarFixed');
+                            }
+                        }
+                        else {
+                            $('#sidebar').removeClass('sidebarFixed');
+                        }
+                    };
+                }
+            }
+        });
