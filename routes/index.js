@@ -10,8 +10,6 @@ var path = require('path');
 var url = require('url');
 var server = require('../bin/www')
 var io = require('socket.io').listen(server); //app //app2
-//require('../bin/www')(io);
-//var Cookies = require("cookies")
 
 router.get('/api/1a2f164967f55325', function(req, res) {
     if (req.user === undefined) {
@@ -94,18 +92,13 @@ router.get('/chat', function (req, res) {
 });
 
 router.get('/app', function (req, res) {
-  //if (!req.user || req.user.status !== 'ENABLED') {
-  //  return res.redirect('/login');
-  //}
+  if (!req.user || req.user.status !== 'ENABLED') {
+    return res.redirect('/login');
+  }
   res.render('app', {
       title: 'App',
       user: req.user,
   });
-  //var cookies = new Cookies(req, res);
-  //cookies.set("stormpath_cookie", req.user.email);
-  //console.log(cookies.get("stormpath_cookie"));
-
-  //res.json(req.user.email);
 });
 
 // Logout the user, then redirect to the home page.

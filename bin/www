@@ -42,6 +42,10 @@ io.on("connection", function (socket) {
             socket.emit("tweet", nodeArr[0]);
         });
     });
+    socket.on("dataFromUser", function(data) {
+        console.log('user sends: ', data);
+        reviewStorage.insert(data);
+    });
 });
 
 io.sockets.on('connection', function(socket) { 

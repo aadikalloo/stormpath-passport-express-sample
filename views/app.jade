@@ -9,6 +9,7 @@ block body
     var tweet1 = 1;//{user: "nodesource", text: "Hello, world!"};
     var data = '';
     var u69614;
+    var selectedInput;
     socket.emit("tweet1", tweet1);
     socket.on("tweet", function(tweet) {
       // todo: add the tweet as a DOM node
@@ -28,23 +29,36 @@ block body
     {
       $('#lightgallery').lightGallery();
     }
-    function sendData() {
+    function jumpTo() {
       var msg = document.getElementById("message_input").value;
       themsg = Number(msg);
       console.log(themsg);
       $("ul#lightgallery.list-unstyled.row").html("");
       socket.emit("tweet1", themsg);
       document.getElementById("message_input").value = "";
+      document.getElementById("commentbox").value = "";
+    }
+    function sendData() {
+      var dataObj = {"uid": u69614,
+                    "lesionNum": data['lesionNum'],
+                    "filenames": files,
+                    "lesionStatus": selectedInput
+                    "comment": document.getElementById("commentbox").value;
+                    }
+      socket.emit("dataFromUser", dataObj);
+      console.log(dataObj);
     }
     function requestNext() {
       selectedInput = $('input[name="followupStatus"]:checked').val();
       if(selectedInput == null) {
         alert("Please select a value.");
       } else {
+      sendData();
       var nextLesion = data['lesionNum'] + 1;
       $("ul#lightgallery.list-unstyled.row").html("");
       socket.emit("tweet1", nextLesion);
       document.getElementById("message_input").value = "";
+      document.getElementById("commentbox").value = "";
       console.log(selectedInput);
       $('input[name="followupStatus"]').attr('checked',false);
       }
@@ -80,7 +94,7 @@ block body
                               <div id="requestLesionNumButton">\
                               <p>Jump to Lesion Number:</p>\
                               <input id="message_input" type="text"/>\
-                              <button onclick="sendData()">Jump</button></div>');  //append text
+                              <button onclick="jumpTo()">Jump</button></div>');  //append text
       } else {
         setTimeout(checkContainer, 50); //wait 50 ms, then try again
       }
