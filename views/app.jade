@@ -42,8 +42,8 @@ block body
       var dataObj = {"uid": u69614,
                     "lesionNum": data['lesionNum'],
                     "filenames": files,
-                    "lesionStatus": selectedInput
-                    "comment": document.getElementById("commentbox").value;
+                    "lesionStatus": selectedInput,
+                    "comment": document.getElementById("commentbox").value
                     }
       socket.emit("dataFromUser", dataObj);
       console.log(dataObj);
