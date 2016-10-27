@@ -6,17 +6,17 @@ block body
   .demo-gallery
     ul#lightgallery.list-unstyled.row
   script.
-    var tweet1 = 1;//{user: "nodesource", text: "Hello, world!"};
+    var requestLesion = 1;//{user: "nodesource", text: "Hello, world!"};
     var data = '';
     var u69614;
     var selectedInput;
-    socket.emit("tweet1", tweet1);
+    socket.emit("requestLesion", requestLesion);
     socket.on("tweet", function(tweet) {
       // todo: add the tweet as a DOM node
       console.log('client receives: ', tweet);
       data = tweet;
       files = data['filenames'];
-      document.getElementById('lesionNumber').innerHTML = data['lesionNum'];
+      document.getElementById('lesionNumber').innerHTML = data['lesionID'];
       for (i = 0; i < files.length; i++) {
         $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a></li>'));
       }
@@ -34,13 +34,13 @@ block body
       themsg = Number(msg);
       console.log(themsg);
       $("ul#lightgallery.list-unstyled.row").html("");
-      socket.emit("tweet1", themsg);
+      socket.emit("requestLesion", themsg);
       document.getElementById("message_input").value = "";
       document.getElementById("commentbox").value = "";
     }
     function sendData() {
       var dataObj = {"uid": u69614,
-                    "lesionNum": data['lesionNum'],
+                    "lesionID": data['lesionID'],
                     "filenames": files,
                     "lesionStatus": selectedInput,
                     "comment": document.getElementById("commentbox").value
@@ -54,9 +54,9 @@ block body
         alert("Please select a value.");
       } else {
       sendData();
-      var nextLesion = data['lesionNum'] + 1;
+      var nextLesion = data['lesionID'] + 1;
       $("ul#lightgallery.list-unstyled.row").html("");
-      socket.emit("tweet1", nextLesion);
+      socket.emit("requestLesion", nextLesion);
       document.getElementById("message_input").value = "";
       document.getElementById("commentbox").value = "";
       console.log(selectedInput);
@@ -83,7 +83,8 @@ block body
                               <input name="followupStatus" value="unchangedBenign" type="radio"/> Unchanged Benign<br/>\
                               <input name="followupStatus" value="changedBenign" type="radio"/> Changed Benign<br/>\
                               <input name="followupStatus" value="changedMalignant" type="radio"/> Changed Malignant<br/>\
-                              <input name="followupStatus" value="Unknown" type="radio"/> Unknown<br/>\
+                              <input name="followupStatus" value="unknown" type="radio"/> Unknown<br/>\
+                              <input name="followupStatus" value="exclude" type="radio"/> Exclude<br/>\
                               </form>\
                               </br>\
                               <p>Comments:</p>\

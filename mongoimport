@@ -1,1 +1,1 @@
-mongoimport --db nodejs --collection imagereview --type json --file /Users/aadi/Documents/stormpath-passport-express-sample/data.json --jsonArray
+mongoimport --db nodejs --collection imagereview1 --type json --file /Users/aadi/Documents/benign_followup/json_mel1_bfln.json --jsonArray

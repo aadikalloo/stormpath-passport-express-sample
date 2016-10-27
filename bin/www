@@ -9,7 +9,7 @@ var fs = require('fs');
 var path = require('path');
 var url = require('url');
 var imageDir = '/Users/aadi/Downloads/la/';
-var files1 = getImages2(imageDir); //want to send this to client
+//var files1 = getImages2(imageDir); //want to send this to client
 var counter = 0;
 var express = require('express');
 var router = express.Router();
@@ -33,9 +33,9 @@ var io = require('socket.io').listen(server); //app //app2
 
 io.on("connection", function (socket) {
     console.log('connection from: ', socket.id);
-    socket.on("tweet1", function (tweet1) {
-        console.log('server receives: ', tweet1);
-        requestedLesionNum = tweet1;
+    socket.on("requestLesion", function (requestLesion) {
+        console.log('server receives: ', requestLesion);
+        requestedLesionNum = requestLesion;
         _getMsg(requestedLesionNum, function (res) {
             nodeArr = res;  // just moved the nodeArr declaration to function scope
             console.log('server sends: ', nodeArr);
@@ -47,7 +47,7 @@ io.on("connection", function (socket) {
         reviewStorage.insert(data);
     });
 });
-
+/*
 io.sockets.on('connection', function(socket) { 
 	socket.on('message_to_server', function(data) { 
 		var escaped_message = data["message"];
@@ -70,5 +70,5 @@ function getImages2(imageDir) {
     });
     return files;
 }
-
+*/
 module.exports = io;
