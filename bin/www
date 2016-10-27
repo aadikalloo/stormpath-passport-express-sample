@@ -42,9 +42,6 @@ io.on("connection", function (socket) {
             socket.emit("tweet", nodeArr[0]);
         });
     });
-    socket.on("dataToServer", function(data) {
-
-    });
 });
 
 io.sockets.on('connection', function(socket) { 
@@ -70,4 +67,4 @@ function getImages2(imageDir) {
     return files;
 }
 
-module.exports = server;
+module.exports = io;

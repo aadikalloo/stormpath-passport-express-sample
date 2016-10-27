@@ -8,6 +8,7 @@ block body
   script.
     var tweet1 = 1;//{user: "nodesource", text: "Hello, world!"};
     var data = '';
+    var u69614;
     socket.emit("tweet1", tweet1);
     socket.on("tweet", function(tweet) {
       // todo: add the tweet as a DOM node
@@ -23,7 +24,6 @@ block body
         createLightGallery();
       } 
     });
-  script.
     function createLightGallery()
     {
       $('#lightgallery').lightGallery();
@@ -49,9 +49,18 @@ block body
       $('input[name="followupStatus"]').attr('checked',false);
       }
     }
+    function checkUser() {
+      $.getJSON("/api/1a2f164967f55325", function(data) {
+        if (data.hasOwnProperty('username')) {
+            u69614 = data.username;
+            console.log('Username: ' + data.username);
+        }
+      });
+    }
     $(document).ready(function() {
       checkContainer();
       createLightGallery();
+      checkUser();
     });
     function checkContainer () {
       if($('#sidebar').is(':visible')){ //if the container is visible on the page
@@ -62,6 +71,10 @@ block body
                               <input name="followupStatus" value="changedMalignant" type="radio"/> Changed Malignant<br/>\
                               <input name="followupStatus" value="Unknown" type="radio"/> Unknown<br/>\
                               </form>\
+                              </br>\
+                              <p>Comments:</p>\
+                              <textarea id="commentbox" style="width:250px;height:80px;"></textarea>\
+                              </br>\
                               </br>\
                               <button id="nextButton" onclick="requestNext()">Next Lesion</button>\
                               <div id="requestLesionNumButton">\

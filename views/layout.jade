@@ -172,7 +172,7 @@ html
     border-left: 1px solid #FFF;
     padding-left: 10px;
     margin-left: 10px;
-    background-color: #568;
+    background-color: #069;
     }
     .sidebarFixed {
     position: fixed !important;
@@ -183,15 +183,36 @@ html
     #message_input {
     color: black;
     }
+    #commentbox {
+    color: black;
+    height: 50px;
+    }
     #requestLesionNumButton {
     color: black;
-    margin-top: 40vh;
+    margin-top: 20vh;
     }
     #requestLesionNumButton p{
     color: white;
     }
     #nextButton {
-    color: black;
+    background-color: #2b3e50;  /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    }
+    .button {
+    background-color: #2b3e50;  /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
     }
   body
     .container
@@ -203,7 +224,7 @@ html
             li
               a(href='/dashboard') Dashboard
             li
-              a(href='/userlist') Userlist
+              a(href='/app') App
             li
               a(href='/logout') Logout
           else
@@ -214,10 +235,10 @@ html
     script(src='/js/bootstrap.min.js').
     script.
         $(document).ready(function () {
-            if(window.location.href.indexOf("userlist") > -1) {
+            if(window.location.href.indexOf("app") > -1) {
                 $("body").prepend('<div id="sidebar">');
                 $("#sidebar").append('<h1 id="sidebartitle">Review</h1>');
-                $("#sidebartitle").append('<h5>Currently reviewing lesion <p style="display:inline" id="lesionNumber"></p></h5>');
+                $("#sidebartitle").append('<h4>Currently reviewing lesion <p style="display:inline" id="lesionNumber"></p></h4>');
                 if (window.XMLHttpRequest) {
                     window.onscroll = function() {
                         if ($('body').scrollTop() > 170 || $('html').scrollTop() > 170) {

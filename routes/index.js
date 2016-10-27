@@ -8,6 +8,21 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
+var server = require('../bin/www')
+var io = require('socket.io').listen(server); //app //app2
+//require('../bin/www')(io);
+//var Cookies = require("cookies")
+
+router.get('/api/1a2f164967f55325', function(req, res) {
+    if (req.user === undefined) {
+        // The user is not logged in
+        res.json({});
+    } else {
+        res.json({
+            username: req.user.email
+        });
+    }
+});
 
 // Render the home page.
 router.get('/', function(req, res) {
@@ -40,7 +55,6 @@ router.post('/register', function(req, res) {
   // Grab our app, then attempt to create this user's account.
   var app = spClient.getApplication(process.env['STORMPATH_APP_HREF'], function(err, app) {
     if (err) throw err;
-
     app.createAccount({
       givenName: 'John',
       surname: 'Smith',
@@ -63,15 +77,15 @@ router.post('/register', function(req, res) {
 
 // Render the login page.
 router.get('/login', function(req, res) {
-  res.render('login', { title: 'Login', error: req.flash('error')[0] });
-});
+  res.render('login', { title: 'Login', 
+                        error: req.flash('error')[0]});
+  });
 
 //render chat page
 router.get('/chat', function (req, res) {
   if (!req.user || req.user.status !== 'ENABLED') {
     return res.redirect('/login');
   }
-
   res.render('chat', {
     title: 'Chat',
     user: req.user,
@@ -79,16 +93,20 @@ router.get('/chat', function (req, res) {
   );
 });
 
-router.get('/userlist', function (req, res) {
+router.get('/app', function (req, res) {
   //if (!req.user || req.user.status !== 'ENABLED') {
   //  return res.redirect('/login');
   //}
-  res.render('userlist', {
-      title: 'Userlist',
+  res.render('app', {
+      title: 'App',
       user: req.user,
   });
-});
+  //var cookies = new Cookies(req, res);
+  //cookies.set("stormpath_cookie", req.user.email);
+  //console.log(cookies.get("stormpath_cookie"));
 
+  //res.json(req.user.email);
+});
 
 // Logout the user, then redirect to the home page.
 router.get('/logout', function(req, res) {
