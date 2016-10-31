@@ -16,9 +16,11 @@ block body
       console.log('client receives: ', tweet);
       data = tweet;
       files = data['filenames'];
-      document.getElementById('lesionNumber').innerHTML = data['lesionID'];
+      document.getElementById('lesionNumber').innerHTML = data['lesionNum'];
+      document.getElementById("commentbox").value = "Comment only if necessary.";
       for (i = 0; i < files.length; i++) {
-        $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned.</p>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a></li>'));
+        $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h3> t = ', data['timepoints'][i], ' days </h3>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a><p id="timepointText"> t = ', data['timepoints'][i], ' days</p</li>'));
+        //$("ul#lightgallery.list-unstyled.row").append('<p id="timepointText">', data['timepoints'][i], ' days</p></div>')
       }
       if($("#lightgallery").data("lightGallery")) {
         $("#lightgallery").data("lightGallery").destroy(true);
@@ -31,18 +33,23 @@ block body
     }
     function jumpTo() {
       var msg = document.getElementById("message_input").value;
-      themsg = Number(msg);
-      console.log(themsg);
-      $("ul#lightgallery.list-unstyled.row").html("");
-      socket.emit("requestLesion", themsg);
-      document.getElementById("message_input").value = "";
-      document.getElementById("commentbox").value = "";
+      if (msg == "") {
+        alert("Please enter a value.")
+      } else {
+        themsg = Number(msg);
+        console.log(themsg);
+        $("ul#lightgallery.list-unstyled.row").html("");
+        socket.emit("requestLesion", themsg);
+        document.getElementById("message_input").value = "";
+        document.getElementById("commentbox").value = "Comment only if necessary.";
+      }
     }
     function sendData() {
       var dataObj = {"uid": u69614,
-                    "lesionID": data['lesionID'],
+                    "lesionNum": data['lesionNum'],
                     "filenames": files,
                     "lesionStatus": selectedInput,
+                    "timepoints": data['timepoints'],
                     "comment": document.getElementById("commentbox").value
                     }
       socket.emit("dataFromUser", dataObj);
@@ -51,14 +58,14 @@ block body
     function requestNext() {
       selectedInput = $('input[name="followupStatus"]:checked').val();
       if(selectedInput == null) {
-        alert("Please select a value.");
+        alert("Please select a status.");
       } else {
       sendData();
-      var nextLesion = data['lesionID'] + 1;
+      var nextLesion = data['lesionNum'] + 1;
       $("ul#lightgallery.list-unstyled.row").html("");
       socket.emit("requestLesion", nextLesion);
       document.getElementById("message_input").value = "";
-      document.getElementById("commentbox").value = "";
+      document.getElementById("commentbox").value = "Comment only if necessary.";
       console.log(selectedInput);
       $('input[name="followupStatus"]').attr('checked',false);
       }
@@ -77,13 +84,14 @@ block body
       checkUser();
     });
     function checkContainer () {
+      //<input name="followupStatus" value="changedMalignant" type="radio"/> Changed Malignant<br/>\
+      //<input name="followupStatus" value="unknown" type="radio"/> Unknown<br/>\
       if($('#sidebar').is(':visible')){ //if the container is visible on the page
-        $("#sidebar").append('</br>\
+        $("#sidebar").append('\
+                              <h4 style="padding-top:8px">Select Status:</h4>\
                               <form>\
                               <input name="followupStatus" value="unchangedBenign" type="radio"/> Unchanged Benign<br/>\
                               <input name="followupStatus" value="changedBenign" type="radio"/> Changed Benign<br/>\
-                              <input name="followupStatus" value="changedMalignant" type="radio"/> Changed Malignant<br/>\
-                              <input name="followupStatus" value="unknown" type="radio"/> Unknown<br/>\
                               <input name="followupStatus" value="exclude" type="radio"/> Exclude<br/>\
                               </form>\
                               </br>\

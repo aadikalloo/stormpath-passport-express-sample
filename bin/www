@@ -38,12 +38,16 @@ io.on("connection", function (socket) {
         requestedLesionNum = requestLesion;
         _getMsg(requestedLesionNum, function (res) {
             nodeArr = res;  // just moved the nodeArr declaration to function scope
+            if (typeof nodeArr[0] != "undefined") {
+                nodeArr[0]['refno'] = '0';
+            }
             console.log('server sends: ', nodeArr);
             socket.emit("tweet", nodeArr[0]);
         });
     });
     socket.on("dataFromUser", function(data) {
         console.log('user sends: ', data);
+        data.comment = data.comment.replace("Comment only if necessary.", "");
         reviewStorage.insert(data);
     });
 });
