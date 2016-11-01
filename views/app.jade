@@ -6,7 +6,8 @@ block body
   .demo-gallery
     ul#lightgallery.list-unstyled.row
   script.
-    var requestLesion = 1;//{user: "nodesource", text: "Hello, world!"};
+    window.requestLesion = 1;//{user: "nodesource", text: "Hello, world!"};
+    var f = "";
     var data = '';
     var u69614;
     var selectedInput;
@@ -71,18 +72,27 @@ block body
       }
     }
     function checkUser() {
-      $.getJSON("/api/1a2f164967f55325", function(data) {
+      f = $.getJSON("/api/1a2f164967f55325", function(data) {
         if (data.hasOwnProperty('username')) {
             u69614 = data.username;
-            console.log('Username: ' + data.username);
+            console.log('Username: ' + u69614);
+            //getUserProgress(u69614);
+            return u69614;
         }
       });
+      return f;
     }
-    $(document).ready(function() {
-      checkContainer();
-      createLightGallery();
-      checkUser();
-    });
+    function getUserProgress() {
+      socket.emit("userProgressRequest", checkUser());
+      socket.on("userProgressReturn", function(userProgress) {
+        //return callback(userProgress);
+        console.log('User Progress: ', userProgress);
+        //if (userProgress != 1) {
+          window.alert('Max lesion number completed: '.concat(userProgress, '. You may jump to #', userProgress+1));
+        //}
+        //return result;
+      });
+    }
     function checkContainer () {
       //<input name="followupStatus" value="changedMalignant" type="radio"/> Changed Malignant<br/>\
       //<input name="followupStatus" value="unknown" type="radio"/> Unknown<br/>\

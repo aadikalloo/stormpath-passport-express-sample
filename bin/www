@@ -25,6 +25,22 @@ function _getMsg(st, callback) {
     });
 }
 
+function _userProgress(user, callback) {
+    console.log('requesting user', user['responseJSON']['username']);
+    username = user['responseJSON']['username'];
+    console.log('type', typeof(username));
+    data = reviewStorage.aggregate([{$match:{'uid': username}},
+                               {$group:{_id: username, progress:{$max:"$lesionNum"}}}
+                              ]);
+    if (typeof data != undefined) {
+        data.toArray(function(err, docs) {
+            callback(docs);
+        });
+    } else {
+        data[0]['progress'] = 1;
+    }
+}
+
 var server = app1.listen(app1.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
 });
@@ -49,6 +65,18 @@ io.on("connection", function (socket) {
         console.log('user sends: ', data);
         data.comment = data.comment.replace("Comment only if necessary.", "");
         reviewStorage.insert(data);
+    });
+    socket.on("userProgressRequest", function(user) {
+        _userProgress(user, function (res) {
+            console.log(res[0]);
+            if (typeof res[0] != "undefined") {
+                var userProgress = res[0]['progress'];  // just moved the nodeArr declaration to function scope
+                console.log('user progress return: ', userProgress);
+            } else {
+                userProgress = 1;
+            }
+            socket.emit("userProgressReturn", userProgress);
+        });
     });
 });
 /*
