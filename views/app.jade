@@ -6,7 +6,7 @@ block body
   .demo-gallery
     ul#lightgallery.list-unstyled.row
   script.
-    window.requestLesion = 1;//{user: "nodesource", text: "Hello, world!"};
+    window.requestLesion = 13;//{user: "nodesource", text: "Hello, world!"};
     var f = "";
     var data = '';
     var u69614;
@@ -19,7 +19,10 @@ block body
       data = tweet;
       files = data['filenames'];
       for (i = 0; i < files.length; i++) {
-        $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h3> t = ', data['timepoints'][i], ' days </h3>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a><p id="timepointText"> t = ', data['timepoints'][i], ' days</p</li>'));
+        y = Math.floor(data['timepoints'][i]/365);
+        m = Math.floor(12 * (data['timepoints'][i]/365 - y));
+        easyDate = "".concat(y, "y, ", m, "m")
+        $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h3> t = ', data['timepoints'][i], ' days (',easyDate,') </h3>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a><p id="timepointText"> t = ', data['timepoints'][i], ' days (',easyDate,')</p</li>'));
         //$("ul#lightgallery.list-unstyled.row").append('<p id="timepointText">', data['timepoints'][i], ' days</p></div>')
       }
       cCommentBox();
@@ -93,7 +96,7 @@ block body
         //return callback(userProgress);
         console.log('User Progress: ', userProgress);
         if (userProgress > 0) {
-          window.alert('Max lesion number completed: '.concat(userProgress, '. You may jump to #', userProgress+1));
+          //window.alert('Max lesion number completed: '.concat(userProgress, '. You may jump to #', userProgress+1));
         }
         //return result;
       });
