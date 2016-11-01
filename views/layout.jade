@@ -21,7 +21,7 @@ html
     script(src='js/jquery.mousewheel.min.js')
     script(src='/socket.io/socket.io.js').
     script.
-        var socket = io.connect('http://localhost:3000'); //SET IP HERE ///////////////////////////////////////////
+        var socket = io.connect('http://172.18.50.64:3000'); //SET IP HERE ///////////////////////////////////////////
     <!--[if lt IE 9 ]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -228,13 +228,13 @@ html
             li
               a(href='/dashboard') Dashboard
             li
-              a(href='/app') App
+              a(href='/app').btn.btn-primary App
             li
               a(href='/logout') Logout
           else
             li
               a(href='/login') Login
-        h3.text-muted Serial Imaging Review
+        h3.text Follow-up Image Review
       block body
     script(src='/js/bootstrap.min.js').
     script.

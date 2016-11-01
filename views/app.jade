@@ -7,7 +7,6 @@ block body
     ul#lightgallery.list-unstyled.row
   script.
     window.requestLesion = 1;//{user: "nodesource", text: "Hello, world!"};
-    
     var f = "";
     var data = '';
     var u69614;
@@ -15,19 +14,24 @@ block body
     socket.emit("requestLesion", requestLesion);
     socket.on("tweet", function(tweet) {
       // todo: add the tweet as a DOM node
+      //checkContainer();
       console.log('client receives: ', tweet);
       data = tweet;
       files = data['filenames'];
-      document.getElementById('lesionNumber').innerHTML = data['lesionNum'];
-      document.getElementById("commentbox").value = "Comment only if necessary.";
       for (i = 0; i < files.length; i++) {
         $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h3> t = ', data['timepoints'][i], ' days </h3>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a><p id="timepointText"> t = ', data['timepoints'][i], ' days</p</li>'));
         //$("ul#lightgallery.list-unstyled.row").append('<p id="timepointText">', data['timepoints'][i], ' days</p></div>')
       }
+      cCommentBox();
       if($("#lightgallery").data("lightGallery")) {
         $("#lightgallery").data("lightGallery").destroy(true);
         createLightGallery();
       } 
+    });
+    $(document).ready(function() {
+      checkContainer();
+      createLightGallery();
+      getUserProgress();
     });
     function createLightGallery()
     {
@@ -88,9 +92,9 @@ block body
       socket.on("userProgressReturn", function(userProgress) {
         //return callback(userProgress);
         console.log('User Progress: ', userProgress);
-        //if (userProgress != 1) {
+        if (userProgress > 0) {
           window.alert('Max lesion number completed: '.concat(userProgress, '. You may jump to #', userProgress+1));
-        //}
+        }
         //return result;
       });
     }
@@ -117,5 +121,13 @@ block body
                               <button onclick="jumpTo()">Jump</button></div>');  //append text
       } else {
         setTimeout(checkContainer, 50); //wait 50 ms, then try again
+      }
+    }
+    function cCommentBox () {
+      if($(document.getElementById("commentbox")).is(':visible')){
+        document.getElementById('lesionNumber').innerHTML = data['lesionNum'];
+        document.getElementById("commentbox").value = "Comment only if necessary.";
+      } else {
+        setTimeout(cCommentBox, 50);
       }
     }

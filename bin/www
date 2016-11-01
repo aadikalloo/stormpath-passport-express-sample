@@ -73,7 +73,7 @@ io.on("connection", function (socket) {
                 var userProgress = res[0]['progress'];  // just moved the nodeArr declaration to function scope
                 console.log('user progress return: ', userProgress);
             } else {
-                userProgress = 1;
+                userProgress = 0;
             }
             socket.emit("userProgressReturn", userProgress);
         });
