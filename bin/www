@@ -2,42 +2,64 @@
 var debug = require('debug')('my-application');
 var app1 = require('../app');
 var mongodb = require('mongodb');
-var databaseUrl = "localhost:27017/nodejs"; // "username:password@example.com/mydb"
+var databaseUrl = "localhost:27017/nodejs";
 var db = require("mongojs")(databaseUrl);
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
 var imageDir = '/Users/aadi/Downloads/la/';
-//var files1 = getImages2(imageDir); //want to send this to client
+var difference = require("array-difference");
 var counter = 0;
 var express = require('express');
 var router = express.Router();
 var nodeArr = '';
+var allLesions = '';
+var userLesions = '';
 var requestedLesionNum = '';
 
 app1.set('port', process.env.PORT || 3000);
 var reviewStorage = db.collection('reviewedData');
 
-function _getMsg(st, callback) {
+function removeA(arr) {
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax= arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
+}
+
+function _getMsg(st, callback) { //return data for particular requested lesion number
     db.collection('imagereview1').find({"lesionNum": st }).toArray(function (err, docs) {
         callback(docs);
     });
 }
 
-function _userProgress(user, callback) {
-    console.log('requesting user', user['responseJSON']['username']);
-    username = user['responseJSON']['username'];
-    console.log('type', typeof(username));
-    data = reviewStorage.aggregate([{$match:{'uid': username}},
-                               {$group:{_id: username, progress:{$max:"$lesionNum"}}}
-                              ]);
-    if (typeof data != undefined) {
-        data.toArray(function(err, docs) {
+function _allLesions(user, callback) {
+    data_allLesions = db.collection('imagereview1').aggregate([{$match:{'lesionNum': {$gt: 0}}}, {$group:{_id: {}, lesions:{$push:"$lesionNum"}}}]);
+    if (typeof data_allLesions != undefined) {
+        data_allLesions.toArray(function(err, docs) {
             callback(docs);
         });
     } else {
-        data[0]['progress'] = 1;
+        data_allLesions[0]['lesions'] = 1;
+    }
+}
+
+function _userProgress(user, callback) {
+    console.log('requesting user', user['responseJSON']['username']);
+    username = user['responseJSON']['username'];
+    //console.log('type', typeof(username));
+    userLesions = reviewStorage.aggregate([{$match:{'uid': username}},{$group:{_id: username, progress:{$push:"$lesionNum"}}}]);
+    if (typeof userLesions != undefined) {
+        userLesions.toArray(function(err, docs) {
+            callback(docs);
+        });
+    } else {
+        userLesions[0]['progress'] = 1;
     }
 }
 
@@ -48,59 +70,46 @@ var server = app1.listen(app1.get('port'), function() {
 var io = require('socket.io').listen(server); //app //app2
 
 io.on("connection", function (socket) {
-    console.log('connection from: ', socket.id);
+
     socket.on("requestLesion", function (requestLesion) {
-        console.log('server receives: ', requestLesion);
+        //console.log('server receives: ', requestLesion);
         requestedLesionNum = requestLesion;
         _getMsg(requestedLesionNum, function (res) {
             nodeArr = res;  // just moved the nodeArr declaration to function scope
             if (typeof nodeArr[0] != "undefined") {
                 nodeArr[0]['refno'] = '0';
             }
-            console.log('server sends: ', nodeArr);
+            //console.log('server sends: ', nodeArr);
             socket.emit("tweet", nodeArr[0]);
         });
     });
+
     socket.on("dataFromUser", function(data) {
         console.log('user sends: ', data);
         data.comment = data.comment.replace("Comment only if necessary.", "");
         reviewStorage.insert(data);
     });
+
     socket.on("userProgressRequest", function(user) {
-        _userProgress(user, function (res) {
-            console.log(res[0]);
+        _allLesions(user, function (res) {
             if (typeof res[0] != "undefined") {
-                var userProgress = res[0]['progress'];  // just moved the nodeArr declaration to function scope
-                console.log('user progress return: ', userProgress);
+                var allLesions = res[0]['lesions'];  // just moved the nodeArr declaration to function scope
+                _userProgress(user, function (res) {
+                    if (typeof res[0] != "undefined") {
+                        userProgress = res[0]['progress'];  // just moved the nodeArr declaration to function scope
+                        unreviewed = allLesions;
+                        for (i = 0; i < userProgress.length; i++){
+                            unreviewed = removeA(unreviewed, userProgress[i])
+                        }
+                        socket.emit("userProgressReturn", unreviewed);
+                    } else {
+                        unreviewed = allLesions;
+                    }
+                });
             } else {
-                userProgress = 0;
-            }
-            socket.emit("userProgressReturn", userProgress);
+            }            
         });
     });
 });
-/*
-io.sockets.on('connection', function(socket) { 
-	socket.on('message_to_server', function(data) { 
-		var escaped_message = data["message"];
-		var dataObj = {"count": counter, "files": files1};
-		io.sockets.emit("message_to_client", dataObj); 
-		console.log(JSON.stringify(dataObj["files"]));
-		console.log(counter); counter = counter + 1;
-	});
-});
 
-function getImages2(imageDir) {
-    var fileType = '.jpg',
-        files = [], i;
-    fs.readdir(imageDir, function (err, list) {
-        for(i=0; i<list.length; i++) {
-            if(path.extname(list[i]) === fileType) {
-                files.push(list[i]); //store the file name into the array files
-            }
-        }
-    });
-    return files;
-}
-*/
 module.exports = io;

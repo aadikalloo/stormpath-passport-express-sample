@@ -1,129 +1,137 @@
 extends layout
 
 block body
-  h1.
-      Images
+  h1 Images
   .demo-gallery
     ul#lightgallery.list-unstyled.row
   script.
-    window.requestLesion = 100;//{user: "nodesource", text: "Hello, world!"};
     var f = "";
     var data = '';
     var u69614;
     var selectedInput;
-    socket.emit("requestLesion", requestLesion);
+    var thisglobalvar = '';
+    var unreviewed1;
+    var currentLesionIndex = 0;
+    function _gallery() {
+    socket.emit("requestLesion", unreviewed1[currentLesionIndex]);
     socket.on("tweet", function(tweet) {
-      // todo: add the tweet as a DOM node
-      //checkContainer();
-      console.log('client receives: ', tweet);
-      data = tweet;
-      files = data['filenames'];
-      var first_last = [0, files.length-1];
-      first_last.forEach(function(i) {
-        console.log('i', i);
-        y = Math.floor(data['timepoints'][i]/365);
-        m = Math.floor(12 * (data['timepoints'][i]/365 - y));
-        easyDate = "".concat(y, "y, ", m, "m")
-        $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h3> t = ', data['timepoints'][i], ' days (',easyDate,') </h3>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a><p id="timepointText"> t = ', data['timepoints'][i], ' days (',easyDate,')</p</li>'));
-        //$("ul#lightgallery.list-unstyled.row").append('<p id="timepointText">', data['timepoints'][i], ' days</p></div>')
-      });
-      cCommentBox();
-      if($("#lightgallery").data("lightGallery")) {
-        $("#lightgallery").data("lightGallery").destroy(true);
-        createLightGallery();
-      } 
+    console.log('client receives: ', tweet);
+    data = tweet;
+    files = data['filenames'];
+    var first_last = [0, files.length-1];
+    first_last.forEach(function(i) {
+    y = Math.floor(data['timepoints'][i]/365);
+    m = Math.floor(12 * (data['timepoints'][i]/365 - y));
+    easyDate = "".concat(y, "y, ", m, "m")
+    $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h3> t = ', data['timepoints'][i], ' days (',easyDate,') </h3>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a><p id="timepointText"> t = ', data['timepoints'][i], ' days (',easyDate,')</p</li>'));
     });
+    cCommentBox();
+    if($("#lightgallery").data("lightGallery")) {
+    $("#lightgallery").data("lightGallery").destroy(true);
+    createLightGallery();
+    }
+    });
+    }
     $(document).ready(function() {
-      checkContainer();
-      createLightGallery();
-      getUserProgress();
+    _requestLesion();
+    getUserProgress();
+    checkContainer();
+    createLightGallery();
     });
+    function _requestLesion() {
+    if (typeof unreviewed1 != "undefined") {
+    console.log('unreviewed1', unreviewed1);
+    _gallery();
+    } else {
+    setTimeout(_requestLesion, 100);
+    }
+    }
     function createLightGallery()
     {
-      $('#lightgallery').lightGallery();
+    $('#lightgallery').lightGallery();
     }
     function jumpTo() {
-      var msg = document.getElementById("message_input").value;
-      if (msg == "") {
-        alert("Please enter a value.")
-      } else {
-        themsg = Number(msg);
-        console.log(themsg);
-        $("ul#lightgallery.list-unstyled.row").html("");
-        socket.emit("requestLesion", themsg);
-        document.getElementById("message_input").value = "";
-        document.getElementById("commentbox").value = "Comment only if necessary.";
-      }
+    var msg = document.getElementById("message_input").value;
+    if (msg == "") {
+    alert("Please enter a value.")
+    } else {
+    themsg = Number(msg);
+    console.log(themsg);
+    $("ul#lightgallery.list-unstyled.row").html("");
+    socket.emit("requestLesion", themsg);
+    document.getElementById("message_input").value = "";
+    document.getElementById("commentbox").value = "Comment only if necessary.";
+    }
     }
     function sendData(selectedInput) {
-      var dataObj = {"uid": u69614,
-                    "lesionNum": data['lesionNum'],
-                    "filenames": files,
-                    "lesionStatus": selectedInput,
-                    "timepoints": data['timepoints'],
-                    "comment": document.getElementById("commentbox").value
-                    }
-      socket.emit("dataFromUser", dataObj);
-      console.log(dataObj);
+    var dataObj = {"uid": u69614,
+    "lesionNum": data['lesionNum'],
+    "filenames": files,
+    "lesionStatus": selectedInput,
+    "timepoints": data['timepoints'],
+    "comment": document.getElementById("commentbox").value
+    }
+    socket.emit("dataFromUser", dataObj);
+    console.log(dataObj);
     }
     function requestNext(selectedInput) {
-      sendData(selectedInput);
-      var nextLesion = data['lesionNum'] + 1;
-      $("ul#lightgallery.list-unstyled.row").html("");
-      socket.emit("requestLesion", nextLesion);
-      document.getElementById("message_input").value = "";
-      document.getElementById("commentbox").value = "Comment only if necessary.";
-      console.log(selectedInput);
+    sendData(selectedInput);
+    //var nextLesion = data['lesionNum'] + 1;
+    currentLesionIndex++;
+    $("ul#lightgallery.list-unstyled.row").html("");
+    socket.emit("requestLesion", unreviewed1[currentLesionIndex]);
+    document.getElementById("message_input").value = "";
+    document.getElementById("commentbox").value = "Comment only if necessary.";
+    console.log(selectedInput);
     }
     function checkUser() {
-      f = $.getJSON("/api/1a2f164967f55325", function(data) {
-        if (data.hasOwnProperty('username')) {
-            u69614 = data.username;
-            console.log('Username: ' + u69614);
-            //getUserProgress(u69614);
-            return u69614;
-        }
-      });
-      return f;
+    f = $.getJSON("/api/1a2f164967f55325", function(data) {
+    if (data.hasOwnProperty('username')) {
+    u69614 = data.username;
+    console.log('Username: ' + u69614);
+    //getUserProgress(u69614);
+    return u69614;
+    }
+    });
+    return f;
+    }
+    function sortNumber(a,b) {
+    return a - b;
+    }
+    function assignGlobalvar(avalue) {
+    unreviewed1 = avalue.sort(sortNumber);
     }
     function getUserProgress() {
-      socket.emit("userProgressRequest", checkUser());
-      socket.on("userProgressReturn", function(userProgress) {
-        //return callback(userProgress);
-        console.log('User Progress: ', userProgress);
-        if (userProgress > 0) {
-          //window.alert('Max lesion number completed: '.concat(userProgress, '. You may jump to #', userProgress+1));
-        }
-        //return result;
-      });
+    socket.emit("userProgressRequest", checkUser());
+    socket.on("userProgressReturn", function(userProgress) {
+    assignGlobalvar(userProgress);
+    });
     }
     function checkContainer () {
-      //<input name="followupStatus" value="changedMalignant" type="radio"/> Changed Malignant<br/>\
-      //<input name="followupStatus" value="unknown" type="radio"/> Unknown<br/>\
-      if($('#sidebar').is(':visible')){ //if the container is visible on the page
-        $("#sidebar").append('\
-                              <form><input name="mistake" value="mistake" type="checkbox"/> Mistake on Previous Lesion</form>\
-                              <h4 style="padding-top:8px">Select Status:</h4>\
-                              <button id="nextButton_unchanged" onclick="requestNext(&apos;benign_unchanged&apos;)">Benign Unchanged</button>\
-                              <button id="nextButton_changed" onclick="requestNext(&apos;benign_changed&apos;)">Benign Changed</button>\
-                              <button id="nextButton_exclude" onclick="requestNext(&apos;exclude&apos;)">Exclude</button>\
-                              </br>\
-                              <p>Comments:</p>\
-                              <textarea id="commentbox" style="width:250px;height:80px;"></textarea>\
-                              </br>\
-                              <div id="requestLesionNumButton">\
-                              <p>Jump to Lesion Number:</p>\
-                              <input id="message_input" type="text"/>\
-                              <button onclick="jumpTo()">Jump</button></div>');  //append text
-      } else {
-        setTimeout(checkContainer, 50); //wait 50 ms, then try again
-      }
+    if($('#sidebar').is(':visible')){ //if the container is visible on the page
+    $("#sidebar").append('\
+    <form><input name="mistake" value="mistake" type="checkbox"/> Mistake on Previous Lesion</form>\
+    <h4 style="padding-top:8px">Select Status:</h4>\
+    <button id="nextButton_unchanged" onclick="requestNext(&apos;benign_unchanged&apos;)">Benign Unchanged</button>\
+    <button id="nextButton_changed" onclick="requestNext(&apos;benign_changed&apos;)">Benign Changed</button>\
+    <button id="nextButton_exclude" onclick="requestNext(&apos;exclude&apos;)">Exclude</button>\
+    </br>\
+    <p>Comments:</p>\
+    <textarea id="commentbox" style="width:250px;height:80px;"></textarea>\
+    </br>\
+    <div id="requestLesionNumButton">\
+    <p>Jump to Lesion Number:</p>\
+    <input id="message_input" type="text"/>\
+    <button onclick="jumpTo()">Jump</button></div>');  //append text
+    } else {
+    setTimeout(checkContainer, 50); //wait 50 ms, then try again
+    }
     }
     function cCommentBox () {
-      if($(document.getElementById("commentbox")).is(':visible')){
-        document.getElementById('lesionNumber').innerHTML = data['lesionNum'];
-        document.getElementById("commentbox").value = "Comment only if necessary.";
-      } else {
-        setTimeout(cCommentBox, 50);
-      }
+    if($(document.getElementById("commentbox")).is(':visible')){
+    document.getElementById('lesionNumber').innerHTML = data['lesionNum'];
+    document.getElementById("commentbox").value = "Comment only if necessary.";
+    } else {
+    setTimeout(cCommentBox, 50);
+    }
     }
