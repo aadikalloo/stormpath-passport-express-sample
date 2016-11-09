@@ -6,7 +6,7 @@ block body
   .demo-gallery
     ul#lightgallery.list-unstyled.row
   script.
-    window.requestLesion = 13;//{user: "nodesource", text: "Hello, world!"};
+    window.requestLesion = 100;//{user: "nodesource", text: "Hello, world!"};
     var f = "";
     var data = '';
     var u69614;
@@ -18,13 +18,15 @@ block body
       console.log('client receives: ', tweet);
       data = tweet;
       files = data['filenames'];
-      for (i = 0; i < files.length; i++) {
+      var first_last = [0, files.length-1];
+      first_last.forEach(function(i) {
+        console.log('i', i);
         y = Math.floor(data['timepoints'][i]/365);
         m = Math.floor(12 * (data['timepoints'][i]/365 - y));
         easyDate = "".concat(y, "y, ", m, "m")
         $("ul#lightgallery.list-unstyled.row").append('<li data-responsive="img/'.concat(files[i].replace(".jpg", ""), '-thumb.jpg 375, img/', files[i].replace(".jpg", ""), '-thumb.jpg 480, img/', files[i], ' 800" data-src="img/', files[i], '" data-sub-html="<h3> t = ', data['timepoints'][i], ' days (',easyDate,') </h3>" class="col-xs-6 col-sm-4 col-md-3"><a href=""><img src="img/', files[i], '" class="img-responsive"></a><p id="timepointText"> t = ', data['timepoints'][i], ' days (',easyDate,')</p</li>'));
         //$("ul#lightgallery.list-unstyled.row").append('<p id="timepointText">', data['timepoints'][i], ' days</p></div>')
-      }
+      });
       cCommentBox();
       if($("#lightgallery").data("lightGallery")) {
         $("#lightgallery").data("lightGallery").destroy(true);
@@ -53,7 +55,7 @@ block body
         document.getElementById("commentbox").value = "Comment only if necessary.";
       }
     }
-    function sendData() {
+    function sendData(selectedInput) {
       var dataObj = {"uid": u69614,
                     "lesionNum": data['lesionNum'],
                     "filenames": files,
@@ -64,20 +66,14 @@ block body
       socket.emit("dataFromUser", dataObj);
       console.log(dataObj);
     }
-    function requestNext() {
-      selectedInput = $('input[name="followupStatus"]:checked').val();
-      if(selectedInput == null) {
-        alert("Please select a status.");
-      } else {
-      sendData();
+    function requestNext(selectedInput) {
+      sendData(selectedInput);
       var nextLesion = data['lesionNum'] + 1;
       $("ul#lightgallery.list-unstyled.row").html("");
       socket.emit("requestLesion", nextLesion);
       document.getElementById("message_input").value = "";
       document.getElementById("commentbox").value = "Comment only if necessary.";
       console.log(selectedInput);
-      $('input[name="followupStatus"]').attr('checked',false);
-      }
     }
     function checkUser() {
       f = $.getJSON("/api/1a2f164967f55325", function(data) {
@@ -106,18 +102,15 @@ block body
       //<input name="followupStatus" value="unknown" type="radio"/> Unknown<br/>\
       if($('#sidebar').is(':visible')){ //if the container is visible on the page
         $("#sidebar").append('\
+                              <form><input name="mistake" value="mistake" type="checkbox"/> Mistake on Previous Lesion</form>\
                               <h4 style="padding-top:8px">Select Status:</h4>\
-                              <form>\
-                              <input name="followupStatus" value="unchangedBenign" type="radio"/> Unchanged Benign<br/>\
-                              <input name="followupStatus" value="changedBenign" type="radio"/> Changed Benign<br/>\
-                              <input name="followupStatus" value="exclude" type="radio"/> Exclude<br/>\
-                              </form>\
+                              <button id="nextButton_unchanged" onclick="requestNext(&apos;benign_unchanged&apos;)">Benign Unchanged</button>\
+                              <button id="nextButton_changed" onclick="requestNext(&apos;benign_changed&apos;)">Benign Changed</button>\
+                              <button id="nextButton_exclude" onclick="requestNext(&apos;exclude&apos;)">Exclude</button>\
                               </br>\
                               <p>Comments:</p>\
                               <textarea id="commentbox" style="width:250px;height:80px;"></textarea>\
                               </br>\
-                              </br>\
-                              <button id="nextButton" onclick="requestNext()">Next Lesion</button>\
                               <div id="requestLesionNumButton">\
                               <p>Jump to Lesion Number:</p>\
                               <input id="message_input" type="text"/>\

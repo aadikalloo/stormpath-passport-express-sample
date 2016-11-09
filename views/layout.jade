@@ -21,7 +21,7 @@ html
     script(src='js/jquery.mousewheel.min.js')
     script(src='/socket.io/socket.io.js').
     script.
-        var socket = io.connect('http://172.18.50.64:3000'); //SET IP HERE ///////////////////////////////////////////
+        var socket = io.connect('http://localhost:3000'); //SET IP HERE ///////////////////////////////////////////
     <!--[if lt IE 9 ]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -48,10 +48,10 @@ html
     overflow: hidden;
     position: relative;
     float: left;
-    max-width: 200px; 
-    min-width: 200px;
-    max-height: 150px;
-    min-height: 150px;
+    max-width: 400px; 
+    min-width: 400px;
+    max-height: 300px;
+    min-height: 300px;
     }
     .demo-gallery > ul > li a > img {
     -webkit-transition: -webkit-transform 0.15s ease 0s;
@@ -60,10 +60,10 @@ html
     transition: transform 0.15s ease 0s;
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);
-    max-width: 200px;
-    min-width: 200px;
-    max-height: 150px;
-    min-height: 150px;
+    max-width: 400px;
+    min-width: 400px;
+    max-height: 300px;
+    min-height: 300px;
     }
     .demo-gallery > ul > li a:hover > img {
     -webkit-transform: scale3d(1.1, 1.1, 1.1);
@@ -189,13 +189,13 @@ html
     }
     #requestLesionNumButton {
     color: black;
-    margin-top: 20vh;
+    margin-top: 10vh;
     }
     #requestLesionNumButton p{
     color: white;
     }
-    #nextButton {
-    background-color: #2b3e50;  /* Green */
+    #nextButton_unchanged {
+    background-color: #2a96b7;  /* Green */
     border: none;
     color: white;
     padding: 15px 32px;
@@ -203,6 +203,33 @@ html
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    margin-top: 5px;
+    width: 200px;
+    }
+    #nextButton_changed {
+    background-color: #1f7a27;  /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 5px;
+    width: 200px;
+    }
+    #nextButton_exclude {
+    background-color: #b73838;  /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    width: 200px;
     }
     .button {
     background-color: #2b3e50;  /* Green */
