@@ -104,6 +104,7 @@ io.on("connection", function (socket) {
                         socket.emit("userProgressReturn", unreviewed);
                     } else {
                         unreviewed = allLesions;
+                        socket.emit("userProgressReturn", unreviewed);
                     }
                 });
             } else {
